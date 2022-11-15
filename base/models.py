@@ -3,8 +3,7 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
-class geolocation(models.Model):
-  
+class Geolocation(models.Model):
   user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
   lon = models.DecimalField(max_digits=8, decimal_places=3, null=True,)
   lat = models.DecimalField(max_digits=8, decimal_places=3, null=True,)

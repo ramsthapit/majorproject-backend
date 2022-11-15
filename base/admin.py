@@ -2,5 +2,5 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import geolocation
-admin.site.register(geolocation)
+from .models import Geolocation
+admin.site.register(Geolocation)
