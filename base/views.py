@@ -1,10 +1,4 @@
-from django.shortcuts import render
-
-# Create your views here.
+from django.http import JsonResponse
 
 def getRoutes(request):
-  routes = [
-    {
-      
-    }
-  ]
+  return JsonResponse("hello there !", safe=False)
