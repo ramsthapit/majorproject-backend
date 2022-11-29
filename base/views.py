@@ -24,9 +24,9 @@ def getLocation(request,pk):
 @api_view(['POST'])
 def sendLocation(request):
   data = request.data
-  user = request.user
+  # user = request.user
   location = Geolocation.objects.create(
-    user = user,
+    # user = user,
     lon = data['lon'], 
     lat = data['lat'], 
   )
