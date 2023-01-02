@@ -2,8 +2,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 
+from rest_framework.views import APIView
+
 from .models import Geolocation
-from .serializers import LocationSerializer
+from .serializers import LocationSerializer, UserSerilaizer
 
 @api_view(['GET'])
 def getRoutes(request):
@@ -81,3 +83,12 @@ def deleteLocation(request, pk):
   location = Geolocation.objects.get(id=pk)
   location.delete()
   return Response('Location was deleted!')
+
+
+class RegisterView(APIView):
+    def post(self, request):
+        serializer = UserSerilaizer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
