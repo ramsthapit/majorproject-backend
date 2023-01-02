@@ -10,4 +10,7 @@ urlpatterns = [
     path('location/<str:pk>', views.getLocation),
     path("users/register/", views.RegisterView.as_view()),
     path("users/login/", views.LoginView.as_view()),
+    path("users/profile/", views.UserView.as_view()),
+    path("users/logout/", views.LogoutView.as_view()),
+    path('users/', views.getUsers),
 ]
