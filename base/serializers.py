@@ -2,9 +2,14 @@ from rest_framework import serializers
 from .models import Geolocation, User
 
 class LocationSerializer(serializers.ModelSerializer):
+  user = serializers.SerializerMethodField(read_only=True)
   class Meta:
     model = Geolocation
     fields = '__all__'
+
+  def get_user(self, obj):
+    # print(self.id)
+    return obj.user
 
 class UserSerilaizer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField(read_only=True)
@@ -14,7 +19,7 @@ class UserSerilaizer(serializers.ModelSerializer):
         extra_kwargs = {
           'password': {'write_only': True}
         }
-    def get__id(self, obj):
+    def get_id(self, obj):
       return obj.id
 
     def get_name(self, obj):
