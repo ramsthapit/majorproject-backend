@@ -2,6 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from base.models import Geolocation
 from base.serializers import LocationSerializer
+import jwt
 
 @api_view(['GET'])
 def getLocations(request):
@@ -18,9 +19,12 @@ def getLocation(request,pk):
 @api_view(['POST'])
 def sendLocation(request):
   data = request.data
-  # user = request.user
+  token = request.COOKIES.get('jwt')
+  payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+
+  user = payload['id']
   location = Geolocation.objects.create(
-    # user = user,
+    user = user,
     lon = data['lon'], 
     lat = data['lat'], 
   )

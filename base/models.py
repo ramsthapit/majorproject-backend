@@ -47,14 +47,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         
 
 class Geolocation(models.Model):
-  # user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    user = models.FloatField(null=True)
     lon = models.FloatField(null=True)
     lat = models.FloatField(null=True)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return str(self.lon)
+        return str(self.user)
 
     class Meta:
         ordering = ['-updated']
