@@ -46,7 +46,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Geolocation(models.Model):
     # user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
-    user = models.FloatField(null=True)
+    user = models.IntegerField(null=True)
     lon = models.FloatField(null=True)
     lat = models.FloatField(null=True)
     updated = models.DateTimeField(auto_now=True)

@@ -50,3 +50,9 @@ def deleteLocation(request, pk):
   location = Geolocation.objects.get(id=pk)
   location.delete()
   return Response('Location was deleted!')
+
+@api_view(['GET'])
+def getUserLocation(request,pk):
+  location = Geolocation.objects.filter(user=pk).order_by('-id')[0:1]
+  serializer = LocationSerializer(location, many=True)
+  return Response(serializer.data)
