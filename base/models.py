@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+# from django.conf import settings
 
 # Create your models here.
 class UserManager(BaseUserManager):
@@ -20,7 +21,7 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault('is_active', True)
 
         if extra_fields.get('is_staff') is not True:
-            raise ValueError(_('Super user must have is_staff true'))
+            raise ValueError(('Super user must have is_staff true'))
         return self.create_user(email, password, **extra_fields)
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -37,16 +38,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = []
 
     def __str__(self):
-        return str(self.email)
-    
+        return str(self.email)   
     def has_perm(self, perm, obj=None):
         return self.is_superuser
-
     def has_module_perms(self, app_label):
-        return self.is_superuser
-        
+        return self.is_superuser       
 
 class Geolocation(models.Model):
+    # user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     user = models.FloatField(null=True)
     lon = models.FloatField(null=True)
     lat = models.FloatField(null=True)
