@@ -25,9 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-xow%*vlwi(e)j4$!6h_0*245xn!zjje^@zl0j3)^vr@cic3fqm"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['yatraa.herokuapp.com']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -90,6 +90,10 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     "default": dj_database_url.parse(os.environ.get('DATABASE_URL')),
+# }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -122,8 +126,8 @@ USE_I18N = True
 USE_TZ = True
 
 
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
+# db_from_env = dj_database_url.config(conn_max_age=500)
+# DATABASES['default'].update(db_from_env)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
@@ -133,7 +137,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
-django_heroku.settings(locals(),staticfiles=False)
+# django_heroku.settings(locals(),staticfiles=False)
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
