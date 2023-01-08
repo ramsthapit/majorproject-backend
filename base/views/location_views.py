@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from base.models import Geolocation
 from base.serializers import LocationSerializer
 import jwt
+from django.views.decorators.csrf import csrf_protect
 
 @api_view(['GET'])
 def getLocations(request):
@@ -16,6 +17,7 @@ def getLocation(request,pk):
   serializer = LocationSerializer(location, many = False)
   return Response(serializer.data)
 
+@csrf_protect
 @api_view(['POST'])
 def sendLocation(request):
   data = request.data
