@@ -17,7 +17,7 @@ def getLocation(request,pk):
   serializer = LocationSerializer(location, many = False)
   return Response(serializer.data)
 
-@csrf_protect
+# @csrf_protect
 @requires_csrf_token
 @api_view(['POST'])
 def sendLocation(request):
