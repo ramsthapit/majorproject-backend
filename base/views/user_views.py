@@ -1,4 +1,3 @@
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from rest_framework.views import APIView
@@ -45,23 +44,23 @@ class LoginView(APIView):
         return response
 
 
-@api_view(['GET'])
-def getUsers(request):
-    token = request.COOKIES.get('jwt')
+class UsersView(APIView):
+    def get(self, request):
+        token = request.COOKIES.get('jwt')
 
-    if not token:
-        raise AuthenticationFailed('Unauthenticated!')
-    try:
-        payload = jwt.decode(token, 'secret', algorithms=['HS256'])
-    except jwt.ExpiredSignatureError:
-        raise AuthenticationFailed('Unauthenticated!')
+        if not token:
+            raise AuthenticationFailed('Unauthenticated!')
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated!')
 
-    if not payload['is_staff']:
-        raise AuthenticationFailed('Unauthorized!')
+        if not payload['is_staff']:
+            raise AuthenticationFailed('Unauthorized!')
 
-    users = User.objects.all()
-    serializer = UserSerilaizer(users, many=True)
-    return Response(serializer.data)
+        users = User.objects.all()
+        serializer = UserSerilaizer(users, many=True)
+        return Response(serializer.data)
 
 class UserView(APIView):
     def get(self, request):
@@ -86,3 +85,20 @@ class LogoutView(APIView):
             'message': 'success'
         }
         return response
+
+class DeleteUserView(APIView):
+    def delete(self, request, pk):
+        token = request.COOKIES.get('jwt')
+        if not token:
+            raise AuthenticationFailed('Unauthenticated!')
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated!')
+
+        if not payload['is_staff']:
+            raise AuthenticationFailed('Unauthorized!')
+            
+        user = User.objects.get(id=pk)
+        user.delete()
+        return Response('User Deleted')
