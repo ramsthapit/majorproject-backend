@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from base.models import Geolocation
 from base.serializers import LocationSerializer
 import jwt
-from django.views.decorators.csrf import csrf_protect, requires_csrf_token
+from django.views.decorators.csrf import csrf_protect, requires_csrf_token, csrf_exempt
 
 @api_view(['GET'])
 def getLocations(request):
@@ -58,4 +58,20 @@ def deleteLocation(request, pk):
 def getUserLocation(request,pk):
   location = Geolocation.objects.filter(user=pk).order_by('-id')[0:1]
   serializer = LocationSerializer(location, many=True)
+  return Response(serializer.data)
+
+@csrf_exempt
+@api_view(['POST'])
+def sendLocationUser(request,pk):
+  data = request.data
+  # token = request.COOKIES.get('jwt')
+  # payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+
+  # user = payload['id']
+  location = Geolocation.objects.create(
+    user = pk,
+    lon = data['lon'], 
+    lat = request.data['lat'], 
+  )
+  serializer = LocationSerializer(location, many=False)
   return Response(serializer.data)
