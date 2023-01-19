@@ -4,6 +4,8 @@ from base.models import Geolocation
 from base.serializers import LocationSerializer
 import jwt
 from django.views.decorators.csrf import csrf_protect, requires_csrf_token, csrf_exempt
+import pandas as pd
+import numpy as np
 
 @api_view(['GET'])
 def getLocations(request):
@@ -75,3 +77,34 @@ def sendLocationUser(request,pk):
   )
   serializer = LocationSerializer(location, many=False)
   return Response(serializer.data)
+
+@api_view(['POST'])
+def getBusStop(request):
+  data = request.data
+  lon = data['lon'] 
+  lat = request.data['lat']
+  dataset = pd.read_csv('Ringroad.csv')
+
+  loc = []
+
+  for i in range(len(dataset)):
+      la=(lat-dataset.iloc[i].Latitude)**2
+      lo=(lon-dataset.iloc[i].Longitude)**2
+
+      loc.append([dataset.iloc[i].id, np.sqrt(la+lo)])
+
+  min=loc[i][1]
+  id = 0
+  for i in range(len(loc)):
+    if min > loc[i][1]:
+        min = loc[i][1]
+        id = loc[i][0]
+  busData = dataset.iloc[loc[id-1][0]]
+
+  location = {
+    "id": busData.id,
+    "address": busData.Address,
+    "lon": busData.Longitude,
+    "lat": busData.Latitude
+  }
+  return Response(location)
