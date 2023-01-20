@@ -73,7 +73,7 @@ def sendLocationUser(request,pk):
   location = Geolocation.objects.create(
     user = pk,
     lon = data['lon'], 
-    lat = request.data['lat'], 
+    lat = data['lat'], 
   )
   serializer = LocationSerializer(location, many=False)
   return Response(serializer.data)
@@ -82,25 +82,22 @@ def sendLocationUser(request,pk):
 def getBusStop(request):
   data = request.data
   lon = data['lon'] 
-  lat = request.data['lat']
+  lat = data['lat']
+  # print(lon)
   dataset = pd.read_csv('Ringroad.csv')
-
+  # print(lat)
   loc = []
-
+  busData=[]
   for i in range(len(dataset)):
       la=(lat-dataset.iloc[i].Latitude)**2
       lo=(lon-dataset.iloc[i].Longitude)**2
 
       loc.append([dataset.iloc[i].id, np.sqrt(la+lo)])
 
-  min=loc[i][1]
-  id = 0
-  for i in range(len(loc)):
-    if min > loc[i][1]:
-        min = loc[i][1]
-        id = loc[i][0]
-  busData = dataset.iloc[loc[id-1][0]]
+  loc.sort(key = lambda row: row[1])
 
+  busData = dataset.iloc[loc[0][0]-1]
+  # print(dataset.iloc[loc[0][0]-1].Address)
   location = {
     "id": busData.id,
     "address": busData.Address,
