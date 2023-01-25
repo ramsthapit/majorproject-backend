@@ -6,6 +6,7 @@ urlpatterns = [
     path('create/', views.sendLocation),
     path('create/<str:pk>/', views.sendLocationUser),
     path('busstop/', views.getBusStop),
+    path('busstops/', views.getBusStops),
     path('<str:pk>/update/', views.updateLocation),
     path('<str:pk>/delete/', views.deleteLocation),
     path('<str:pk>/', views.getLocation),
