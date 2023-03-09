@@ -29,6 +29,7 @@ class LoginView(APIView):
         payload = {
             "id": user.id,
             "is_staff":user.is_staff,
+            "is_driver":user.is_driver,
             "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
             "iat": datetime.datetime.utcnow()
         }
@@ -43,7 +44,21 @@ class LoginView(APIView):
         }
         return response
 
-
+class UpdateView(APIView):
+    def put(self, request, pk):
+        data = request.data
+        # print(self.kwargs)
+        user = User.objects.get(id=pk)
+        user.name = data['name']
+        user.email = data['email']
+        user.license_no = data['license_no']
+        user.is_driver = data['is_driver']
+        user.is_staff = data['is_staff']
+        user.is_superuser = data['is_staff']
+        user.save()
+        serializer = UserSerilaizer(user, many=False)
+        return Response(serializer.data)
+    
 class UsersView(APIView):
     def get(self, request):
         token = request.COOKIES.get('jwt')
