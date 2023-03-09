@@ -1,11 +1,18 @@
-from django.urls import path
+from django.urls import path, include
 from base.views import location_views as views
+from rest_framework import routers
+
+router = routers.DefaultRouter()
+router.register(r'', views.BSLViewSet)
 
 urlpatterns = [
+    path('busroutes/',include(router.urls)),
+    path('resetbusroutes/', views.resetBusRoutes),
+    # path("bus/", views.BSLViewSet.as_view({'post': 'create'})),
     path('', views.getLocations),
     path('create/', views.sendLocation),
     path('create/<str:pk>/', views.sendLocationUser),
-    path('busstop/', views.getBusStop),
+    path('busstop/', views.recommendBusStop),
     path('busstops/', views.getBusStops),
     path('<str:pk>/update/', views.updateLocation),
     path('<str:pk>/delete/', views.deleteLocation),
