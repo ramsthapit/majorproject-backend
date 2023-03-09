@@ -29,6 +29,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.CharField(max_length=255, unique=True)
     password = models.CharField(max_length=255)
     username = None
+    # user_image = models.ImageField()
+    is_driver = models.BooleanField(default=False)
+    license_no = models.CharField(max_length=255, null=True, blank=True)
+    vechile_no = models.CharField(max_length=255, null=True, blank=True)
+    # vechile_image = models.ImageField()
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False) # a admin user; non super-user
     is_superuser = models.BooleanField(default=False) # a superuser
@@ -65,4 +70,4 @@ class BusStopLoc(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return self.location
+        return str(self.location)
