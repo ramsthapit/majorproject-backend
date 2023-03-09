@@ -6,6 +6,10 @@ import jwt
 from django.views.decorators.csrf import csrf_protect, requires_csrf_token, csrf_exempt
 import pandas as pd
 import numpy as np
+from rest_framework import viewsets
+from base.models import BusStopLoc
+from base.serializers import BSLSerializer
+from rest_framework.exceptions import AuthenticationFailed
 
 @api_view(['GET'])
 def getLocations(request):
@@ -79,7 +83,7 @@ def sendLocationUser(request,pk):
   return Response(serializer.data)
 
 @api_view(['POST'])
-def getBusStop(request):
+def recommendBusStop(request):
   data = request.data
   lon = data['lon'] 
   lat = data['lat']
@@ -387,3 +391,36 @@ def getBusStops(request):
     }
   ]
   return Response(routes)
+
+class BSLViewSet(viewsets.ModelViewSet):
+    queryset = BusStopLoc.objects.all().order_by('-id')
+    serializer_class = BSLSerializer
+
+
+@api_view(['get'])
+def resetBusRoutes(request):
+    token = request.COOKIES.get('jwt')
+
+    if not token:
+        raise AuthenticationFailed('Unauthenticated!')
+    try:
+        payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+    except jwt.ExpiredSignatureError:
+        raise AuthenticationFailed('Unauthenticated!')
+
+    if not payload['is_staff']:
+        raise AuthenticationFailed('Unauthorized!')
+    
+    dataset = pd.read_csv('Ringroad.csv')
+
+    BusStopLoc.objects.all().delete()
+
+    for i in range(len(dataset)):
+        # print(dataset.iloc[i].Address)
+        busStop = BusStopLoc(
+          lat=dataset.iloc[i].Latitude,
+          lon = dataset.iloc[i].Longitude,
+          location= dataset.iloc[i].Address
+        )
+        busStop.save()
+    return Response("Bus Stop are Added")

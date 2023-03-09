@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Geolocation, User
+from .models import Geolocation, User,BusStopLoc
 
 class LocationSerializer(serializers.ModelSerializer):
   user = serializers.SerializerMethodField(read_only=True)
@@ -35,3 +35,9 @@ class UserSerilaizer(serializers.ModelSerializer):
           instance.set_password(password)
         instance.save()
         return instance
+    
+class BSLSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.ReadOnlyField()
+    class Meta:
+        model = BusStopLoc
+        fields = "__all__"
