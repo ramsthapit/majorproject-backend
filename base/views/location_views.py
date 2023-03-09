@@ -84,29 +84,31 @@ def sendLocationUser(request,pk):
 
 @api_view(['POST'])
 def recommendBusStop(request):
-  data = request.data
-  lon = data['lon'] 
-  lat = data['lat']
-  # print(lon)
-  dataset = pd.read_csv('Ringroad.csv')
-  # print(lat)
+  userData = request.data
+  lon = userData['lon'] 
+  lat = userData['lat']
+  
+  busRoute = BusStopLoc.objects.all()
+  serilizer = BSLSerializer(busRoute, many=True,context={'request': request})
   loc = []
   busData=[]
-  for i in range(len(dataset)):
-      la=(lat-dataset.iloc[i].Latitude)**2
-      lo=(lon-dataset.iloc[i].Longitude)**2
+  for i in range(len(serilizer.data)):
+      # print(i)
+      la=(lat-serilizer.data[i]['lat'])**2
+      lo=(lon-serilizer.data[i]['lon'])**2
 
-      loc.append([dataset.iloc[i].id, np.sqrt(la+lo)])
+      loc.append([serilizer.data[i]['id'], np.sqrt(la+lo)])
 
   loc.sort(key = lambda row: row[1])
-
-  busData = dataset.iloc[loc[0][0]-1]
+  # print(loc)
+  busData = serilizer.data[loc[0][0]-1]
   # print(dataset.iloc[loc[0][0]-1].Address)
+  # print(busData)
   location = {
-    "id": busData.id,
-    "address": busData.Address,
-    "lon": busData.Longitude,
-    "lat": busData.Latitude
+    "id": busData["id"],
+    "location": busData["location"],
+    "lon": busData['lon'],
+    "lat": busData['lat']
   }
   return Response(location)
 
