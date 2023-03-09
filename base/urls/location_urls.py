@@ -6,12 +6,11 @@ router = routers.DefaultRouter()
 router.register(r'', views.BSLViewSet)
 
 urlpatterns = [
-    path('busroutes/',include(router.urls)),
-    path('resetbusroutes/', views.resetBusRoutes),
-    # path("bus/", views.BSLViewSet.as_view({'post': 'create'})),
     path('', views.getLocations),
     path('create/', views.sendLocation),
     path('create/<str:pk>/', views.sendLocationUser),
+    path('busroutes/',include(router.urls)),
+    path('resetbusroutes/', views.resetBusRoutes),
     path('recommend/', views.getBusStop),
     path('busstop/', views.recommendBusStop),
     path('busstops/', views.getBusStops),
