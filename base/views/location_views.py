@@ -32,7 +32,12 @@ def getLocation(request,pk):
 def sendLocation(request):
   data = request.data
   token = request.COOKIES.get('jwt')
-  payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+  if not token:
+      raise AuthenticationFailed('Unauthenticated!')
+  try:
+      payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+  except jwt.ExpiredSignatureError:
+      raise AuthenticationFailed('Unauthenticated!')
 
   user = payload['id']
   location = Geolocation.objects.create(
