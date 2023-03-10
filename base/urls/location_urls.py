@@ -17,5 +17,5 @@ urlpatterns = [
     path('<str:pk>/update/', views.updateLocation),
     path('<str:pk>/delete/', views.deleteLocation),
     path('<str:pk>/', views.getLocation),
-    path('<str:pk>/live/', views.getUserLocation),
+    path('<str:pk>/live/', views.getUserLiveLocation),
 ]

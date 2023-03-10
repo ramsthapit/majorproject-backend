@@ -52,6 +52,18 @@ def updateLocation(request, pk):
   #   content = {'detail': 'Not a valid user'}
   #   return Response(content, status=status.HTTP_400_BAD_REQUEST)
   
+  token = request.COOKIES.get('jwt')
+
+  if not token:
+      raise AuthenticationFailed('Unauthenticated!')
+  try:
+      payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+  except jwt.ExpiredSignatureError:
+      raise AuthenticationFailed('Unauthenticated!')
+
+  if not payload['is_staff']:
+      raise AuthenticationFailed('Unauthorized!')
+
   location = Geolocation.objects.get(id=pk)
   serializer = LocationSerializer(location, data=data)
   if serializer.is_valid():
@@ -61,13 +73,25 @@ def updateLocation(request, pk):
 
 @api_view(['DELETE'])
 def deleteLocation(request, pk):
+  token = request.COOKIES.get('jwt')
+
+  if not token:
+      raise AuthenticationFailed('Unauthenticated!')
+  try:
+      payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+  except jwt.ExpiredSignatureError:
+      raise AuthenticationFailed('Unauthenticated!')
+
+  if not payload['is_staff']:
+      raise AuthenticationFailed('Unauthorized!')
+  
   location = Geolocation.objects.get(id=pk)
   location.delete()
   return Response('Location was deleted!')
 
 
 @api_view(['GET'])
-def getUserLocation(request,pk):
+def getUserLiveLocation(request,pk):
   location = Geolocation.objects.filter(user=pk).order_by('-id')[0:1]
   serializer = LocationSerializer(location, many=True)
   return Response(serializer.data)
