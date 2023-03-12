@@ -71,3 +71,12 @@ class BusStopLoc(models.Model):
     
     def __str__(self):
         return str(self.location)
+    
+# class BusOccupancyTracker(models.Model)
+class OccupancyCount(models.Model):
+    bus_id  = models.IntegerField()
+    total_count = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.bus_id} - {self.total_count}"
