@@ -504,3 +504,9 @@ def resetBusRoutes(request):
 class OCViewSet(viewsets.ModelViewSet):
     queryset = OccupancyCount.objects.all().order_by('-id')
     serializer_class = CountSerializer
+
+@api_view(['GET'])
+def getLiveOccupancyCount(request,pk):
+  count = OccupancyCount.objects.filter(bus_id=pk).order_by('-id')[0:1]
+  serializer = CountSerializer(count, many=True, context={'request': request})
+  return Response(serializer.data)
