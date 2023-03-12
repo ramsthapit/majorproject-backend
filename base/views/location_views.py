@@ -7,8 +7,8 @@ from django.views.decorators.csrf import csrf_protect, requires_csrf_token, csrf
 import pandas as pd
 import numpy as np
 from rest_framework import viewsets
-from base.models import BusStopLoc
-from base.serializers import BSLSerializer
+from base.models import BusStopLoc, OccupancyCount
+from base.serializers import BSLSerializer, CountSerializer
 from rest_framework.exceptions import AuthenticationFailed
 
 
@@ -499,3 +499,8 @@ def resetBusRoutes(request):
         )
         busStop.save()
     return Response("Bus Stop are Added")
+
+
+class OCViewSet(viewsets.ModelViewSet):
+    queryset = OccupancyCount.objects.all().order_by('-id')
+    serializer_class = CountSerializer
